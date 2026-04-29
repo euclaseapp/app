@@ -12,7 +12,7 @@ struct EuclaseApp: App {
 }
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
-    private let floatingPanelController = FloatingPanelController()
+    private let floatingPanelController = PanelController()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         floatingPanelController.start()
