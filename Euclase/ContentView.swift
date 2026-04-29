@@ -17,7 +17,7 @@ struct ContentView: View {
             }
             .padding()
             
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 LazyVStack(alignment: .leading, spacing: 0) {
                     RowItemView(selected: true, title: "Buape", description: "~/Documents/Assets/buape")
                     RowItemView(selected: false, title: "Buape", description: "~/Documents/Assets/buape")
