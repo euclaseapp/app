@@ -3,12 +3,13 @@ import SwiftData
 
 enum Temporary {
     static func insertItem(
+        slug: String,
         name: String,
         parent: String,
         path: String,
         in modelContext: ModelContext
     ) {
-        let record = ItemRecord(name: name, parent: parent, path: path)
+        let record = ItemRecord(name: slug, parent: name, path: parent, slug: path)
         modelContext.insert(record)
 
         do {
@@ -67,6 +68,7 @@ enum Temporary {
     static func bootstrap(in modelContext: ModelContext) {
         if readAllItems(in: modelContext).isEmpty {
             insertItem(
+                slug: "example-command",
                 name: "Example Command",
                 parent: "General",
                 path: "/usr/local/bin/example-command",
