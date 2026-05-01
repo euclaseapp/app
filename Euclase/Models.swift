@@ -1,7 +1,7 @@
 import SwiftData
 
 @Model
-final class ItemRecord {
+final class CommandRecord {
     var slug: String
     var name: String
     var parent: String

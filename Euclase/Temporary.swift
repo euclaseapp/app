@@ -9,7 +9,7 @@ enum Temporary {
         path: String,
         in modelContext: ModelContext
     ) {
-        let record = ItemRecord(name: slug, parent: name, path: parent, slug: path)
+        let record = CommandRecord(name: name, parent: parent, path: path, slug: slug)
         modelContext.insert(record)
 
         do {
@@ -19,8 +19,8 @@ enum Temporary {
         }
     }
 
-    static func readAllItems(in modelContext: ModelContext) -> [ItemRecord] {
-        let descriptor = FetchDescriptor<ItemRecord>(sortBy: [SortDescriptor(\.name)])
+    static func readAllItems(in modelContext: ModelContext) -> [CommandRecord] {
+        let descriptor = FetchDescriptor<CommandRecord>(sortBy: [SortDescriptor(\.name)])
 
         do {
             return try modelContext.fetch(descriptor)
@@ -35,7 +35,7 @@ enum Temporary {
         newPath: String,
         in modelContext: ModelContext
     ) {
-        let descriptor = FetchDescriptor<ItemRecord>(
+        let descriptor = FetchDescriptor<CommandRecord>(
             predicate: #Predicate { $0.name == name }
         )
 
@@ -52,7 +52,7 @@ enum Temporary {
         named name: String,
         in modelContext: ModelContext
     ) {
-        let descriptor = FetchDescriptor<ItemRecord>(
+        let descriptor = FetchDescriptor<CommandRecord>(
             predicate: #Predicate { $0.name == name }
         )
 
@@ -66,14 +66,24 @@ enum Temporary {
     }
 
     static func bootstrap(in modelContext: ModelContext) {
-        if readAllItems(in: modelContext).isEmpty {
-            insertItem(
-                slug: "example-command",
-                name: "Example Command",
-                parent: "General",
-                path: "/usr/local/bin/example-command",
-                in: modelContext
-            )
+        let allRecords = readAllItems(in: modelContext)
+
+        for record in allRecords {
+            modelContext.delete(record)
         }
+
+        do {
+            try modelContext.save()
+        } catch {
+            print("Reset failed: \(error)")
+        }
+
+        insertItem(
+            slug: "example-command",
+            name: "Example Command",
+            parent: "General",
+            path: "/usr/local/bin/example-command",
+            in: modelContext
+        )
     }
 }

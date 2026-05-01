@@ -21,7 +21,7 @@ final class PanelController {
 
     init() {
         do {
-            modelContainer = try ModelContainer(for: ItemRecord.self)
+            modelContainer = try ModelContainer(for: CommandRecord.self)
         } catch {
             fatalError("Failed to create SwiftData container: \(error)")
         }
