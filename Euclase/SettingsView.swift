@@ -1,5 +1,4 @@
 import SwiftUI
-import SwiftData
 
 struct SettingsView: View {
     var body: some View {
@@ -8,7 +7,6 @@ struct SettingsView: View {
                 .tabItem { Label("General", systemImage: "gear") }
             
             ExtensionListView()
-                .modelContainer(for: CommandRecord.self)
                 .tabItem { Label("Extensions", systemImage: "tablecells.fill") }
             
             Text("hmmm")
@@ -19,18 +17,17 @@ struct SettingsView: View {
 }
 
 struct ExtensionListView: View {
-    @Query(sort: [SortDescriptor(\CommandRecord.name)])
-    private var rows: [CommandRecord]
+    @EnvironmentObject private var registry: ExtensionRegistry
 
     var body: some View {
-        Table(of: CommandRecord.self) {
-            TableColumn("Slug", value: \.slug)
-            TableColumn("Name", value: \.name)
-            TableColumn("Parent", value: \.parent)
-            TableColumn("Path", value: \.path)
+        Table(of: ExtensionCommand.self) {
+            TableColumn("Extension", value: \.extensionName)
+            TableColumn("Command", value: \.commandID)
+            TableColumn("Description", value: \.description)
+            TableColumn("Path", value: \.scriptPath)
         } rows: {
-            ForEach(rows, id: \.persistentModelID) { row in
-                TableRow(row)
+            ForEach(registry.commands) { command in
+                TableRow(command)
             }
         }
     }

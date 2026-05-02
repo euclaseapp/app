@@ -1,12 +1,11 @@
 import AppKit
 import KeyboardShortcuts
-import SwiftData
 import SwiftUI
 
 extension KeyboardShortcuts.Name {
     static let togglePanel = Self(
         "togglePanel",
-        default: .init(.space, modifiers: [.option, .command])
+        default: .init(.space, modifiers: [.option])
     )
 }
 
@@ -17,17 +16,13 @@ final class FloatingPanel: NSPanel {
 
 final class PanelController {
     private let panel: FloatingPanel
-    private let modelContainer: ModelContainer
+    private let registry: ExtensionRegistry
 
-    init() {
-        do {
-            modelContainer = try ModelContainer(for: CommandRecord.self)
-        } catch {
-            fatalError("Failed to create SwiftData container: \(error)")
-        }
+    init(registry: ExtensionRegistry) {
+        self.registry = registry
 
         panel = FloatingPanel(
-            contentRect: NSRect(x: 0, y: 0, width: 500, height: 320),
+            contentRect: NSRect(x: 0, y: 0, width: 550, height: 360),
             styleMask: [.nonactivatingPanel, .borderless],
             backing: .buffered,
             defer: false
@@ -37,12 +32,12 @@ final class PanelController {
         panel.backgroundColor = .clear
         panel.isFloatingPanel = true
         panel.level = .mainMenu
-        panel.animationBehavior = .documentWindow
+        panel.animationBehavior = .none
         panel.hidesOnDeactivate = false
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .transient]
         panel.center()
 
-        let hostingView = NSHostingView(rootView: ContentView().modelContainer(modelContainer))
+        let hostingView = NSHostingView(rootView: ContentView().environmentObject(registry))
         panel.contentView = hostingView
     }
 

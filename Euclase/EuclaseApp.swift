@@ -7,14 +7,17 @@ struct EuclaseApp: App {
     var body: some Scene {
         Settings {
             SettingsView()
+                .environmentObject(appDelegate.registry)
         }
     }
 }
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
-    private let floatingPanelController = PanelController()
+    let registry = ExtensionRegistry()
+    private lazy var floatingPanelController = PanelController(registry: registry)
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        registry.reloadFromDisk()
         floatingPanelController.start()
     }
 }
