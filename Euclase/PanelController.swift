@@ -1,13 +1,6 @@
 import AppKit
-import KeyboardShortcuts
+import Carbon
 import SwiftUI
-
-extension KeyboardShortcuts.Name {
-    static let togglePanel = Self(
-        "togglePanel",
-        default: .init(.space, modifiers: [.option])
-    )
-}
 
 final class FloatingPanel: NSPanel {
     override var canBecomeKey: Bool { true }
@@ -17,6 +10,7 @@ final class FloatingPanel: NSPanel {
 final class PanelController {
     private let panel: FloatingPanel
     private let registry: ExtensionRegistry
+    private let hotKeyMonitor = GlobalHotKeyMonitor()
 
     init(registry: ExtensionRegistry) {
         self.registry = registry
@@ -41,10 +35,23 @@ final class PanelController {
         panel.contentView = hostingView
     }
 
+    deinit {
+        hotKeyMonitor.stop()
+    }
+
     func start() {
-        KeyboardShortcuts.onKeyUp(for: .togglePanel) { [weak self] in
+        let didStart = hotKeyMonitor.start(
+            keyCode: UInt32(kVK_Space),
+            modifiers: UInt32(optionKey | cmdKey)
+        ) { [weak self] in
             self?.toggle()
         }
+
+        #if DEBUG
+        if !didStart {
+            print("Panel hotkey monitor failed to start")
+        }
+        #endif
     }
 
     private func toggle() {

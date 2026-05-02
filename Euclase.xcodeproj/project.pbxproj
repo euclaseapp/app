@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E8CC6EB12FA10D36004D9140 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = E8CC6EB02FA10D36004D9140 /* KeyboardShortcuts */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +26,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E8CC6EB12FA10D36004D9140 /* KeyboardShortcuts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,7 +68,6 @@
 			);
 			name = Euclase;
 			packageProductDependencies = (
-				E8CC6EB02FA10D36004D9140 /* KeyboardShortcuts */,
 			);
 			productName = Euclase;
 			productReference = E8B2D28E2FA0C0D700D708D8 /* Euclase.app */;
@@ -101,7 +98,6 @@
 			mainGroup = E8B2D2852FA0C0D700D708D8;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				E8CC6EAF2FA10D36004D9140 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E8B2D28F2FA0C0D700D708D8 /* Products */;
@@ -356,22 +352,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		E8CC6EAF2FA10D36004D9140 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.4.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E8CC6EB02FA10D36004D9140 /* KeyboardShortcuts */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E8CC6EAF2FA10D36004D9140 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
-			productName = KeyboardShortcuts;
-		};
 /* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E8B2D2862FA0C0D700D708D8 /* Project object */;
