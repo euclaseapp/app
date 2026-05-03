@@ -39,14 +39,6 @@ struct RootSearchView: View {
         .onChange(of: query) {
             selectedIndex = 0
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.regularMaterial)
-        .background(.black.opacity(0.25))
-//        .background {
-//            CustomBlur(material: .hudWindow)
-//                .overlay(.black.opacity(0.2))
-//        }
-        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
     }
 
     private var allSearchItems: [SearchItem] {
@@ -97,7 +89,6 @@ struct RootSearchView: View {
     private func loadData() {
         extensions = ExtensionDiscoveryService().discoverExtensions()
         apps = AppDiscoveryService().discoverApps()
-        selectedIndex = 0
     }
 
     private func run(item: SearchItem) {
@@ -136,7 +127,7 @@ struct RootSearchView: View {
 
     @ViewBuilder
     private func searchItemRow(for item: SearchItem, isSelected: Bool) -> some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 16) {
             searchItemIcon(for: item)
             VStack(alignment: .leading, spacing: 4) {
                 Text(item.title)
@@ -230,22 +221,6 @@ private struct SearchItem: Identifiable {
 private enum SearchItemKind {
     case command(extensionID: String, commandName: String, commandDescription: String)
     case app(path: String)
-}
-
-struct CustomBlur: NSViewRepresentable {
-    var material: NSVisualEffectView.Material = .hudWindow
-
-    func makeNSView(context: Context) -> NSVisualEffectView {
-        let view = NSVisualEffectView()
-        view.material = material
-        view.blendingMode = .behindWindow
-        view.state = .active
-        return view
-    }
-
-    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
-        nsView.material = material
-    }
 }
 
 private extension NSImage {
