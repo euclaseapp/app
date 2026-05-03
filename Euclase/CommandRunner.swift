@@ -7,25 +7,44 @@ class CommandRunner {
         let process = Process()
         process.executableURL = bunExecutableURL
         process.arguments = arguments
+        process.qualityOfService = .userInitiated
         return process
     }
 
     static func run(file: String, onMessage: @escaping (String) -> Void) {
-        let stdout = Pipe()
-        let process = bunProcess(arguments: [file])
+        DispatchQueue.global(qos: .userInitiated).async {
+            let stdout = Pipe()
+            let stderr = Pipe()
+            let process = bunProcess(arguments: [file])
 
-        process.standardOutput = stdout
+            process.standardOutput = stdout
+            process.standardError = stderr
 
-        stdout.fileHandleForReading.readabilityHandler = { handle in
-            let data = handle.availableData
-            guard !data.isEmpty, let line = String(data: data, encoding: .utf8) else { return }
-            onMessage(line.trimmingCharacters(in: .whitespacesAndNewlines))
-        }
+            do {
+                try process.run()
+                process.waitUntilExit()
+            } catch {
+                print("Failed to run process: \(error)")
+                return
+            }
 
-        do {
-            try process.run()
-        } catch {
-            print("Failed to run process: \(error)")
+            let stdoutData = stdout.fileHandleForReading.readDataToEndOfFile()
+            let stderrData = stderr.fileHandleForReading.readDataToEndOfFile()
+
+            if let stderrText = String(data: stderrData, encoding: .utf8)?
+                .trimmingCharacters(in: .whitespacesAndNewlines),
+               !stderrText.isEmpty {
+                print("Command stderr: \(stderrText)")
+            }
+
+            guard let stdoutText = String(data: stdoutData, encoding: .utf8)?
+                .trimmingCharacters(in: .whitespacesAndNewlines),
+                !stdoutText.isEmpty
+            else { return }
+
+            DispatchQueue.main.async {
+                onMessage(stdoutText)
+            }
         }
     }
 }
